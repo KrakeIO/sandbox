@@ -1,4 +1,4 @@
-Introduction
+Sandbox
 =======
 
 Sandbox is a javascript class that handles interaction between HTML DOM elements on a web page and the 
@@ -7,8 +7,39 @@ Krake Socket-Server via Socket.IO
 To use the Sandbox, a user must define a corresponding interface for it that hooks up the Sandbox class with the 
 HTML DOM elements. 
 
+Methods for interface
+-------
+
+- SandBox.interface.incrementCounter
+
+- SandBox.interface.displayError
+
+- SandBox.interface.showPane
+
+- SandBox.interface.appendLog
+
+- SandBox.interface.appendRecord
+
+- SandBox.interface.queryString
+
+- SandBox.interface.setQueryString
+
+- SandBox.interface.clearData
+
+- SandBox.interface.setHeader
+
+- SandBox.interface.taskButton
+
+- SandBox.interface.taskButton.readsStart 
+
+- SandBox.interface.taskButton.setStart
+
+- SandBox.interface.taskButton.setRunning
+
+- SandBox.interface.taskButton.setSuccess
+
 Example Usage
-=======
+-------
   
 First include Sandbox.js and then start defining its interface
 
