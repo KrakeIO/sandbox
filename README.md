@@ -7,7 +7,7 @@ Krake Socket-Server via Socket.IO
 To use the Sandbox, a user must define a corresponding interface for it that hooks up the Sandbox class with the 
 HTML DOM elements. 
 
-Methods for interface
+Methods to extend for Sandbox.interface
 -------
 
 - SandBox.interface.incrementCounter
