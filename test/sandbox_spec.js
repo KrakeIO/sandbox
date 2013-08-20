@@ -71,6 +71,27 @@ describe("filterSchema", function() {
   });
 });
 
+describe("getSchemaRecursive", function() {
+  var columns = 
+    [ { col_name: 'title' }
+    , { col_name: 'price' }
+    , { col_name: 'href' 
+      , options: { 
+          columns: [ { col_name: 'description' } ]          
+        }
+      }
+    ]
+  var filtered = self.getSchemaRecursive(columns);
+  it("should describe bottom-level columns", function() {
+    ["title", "price", "description"].forEach(function(bottom){
+      expect(filtered).toContain(bottom);
+    });
+  })
+  it("should not describe columns that have children", function() {
+    expect(filtered).not.toContain("detailed_page_href")
+  })
+});
+
 describe("realTypeOf", function() {
   it("Should correctly classify string values.", function() {
     var value = "Wake up, Neo...";
