@@ -8,6 +8,50 @@ describe("import", function() {
   });
 });
 
+describe("setSchema", function() {
+  beforeEach(function(){
+    self.current_schema = [];
+  });
+  it("Should extract columns by calling `getSchemaRecursive`", function(){
+    var task = { columns: [] }
+    spyOn(self,'getSchemaRecursive').andCallThrough();
+    self.setSchema(task);
+    expect(self.getSchemaRecursive).toHaveBeenCalled();
+  });
+  it("Should include 'origin_url'", function(){
+    var task = { columns: [] }
+    self.setSchema(task);
+    expect(self.current_schema).toContain('origin_url');
+  });
+  it("Should include 'origin_pattern'", function(){
+    var task = { columns: [] }
+    self.setSchema(task);
+    // Despite being absent in our definition.
+    expect(self.current_schema).toContain('origin_pattern');
+  });
+  it("Should include 'origin_value' if 'origin_url' is an object describing them", function(){
+    var task = {
+      origin_url:
+        { origin_pattern: ""
+        , origin_value: []
+        }
+    }
+    self.setSchema(task);
+    expect(self.current_schema).toContain('origin_value');
+  });
+  it("Should not include 'origin_value' if 'origin_url' is not an object describing them", function(){
+    var task = { origin_url:  "http://html5zombo.com/" }
+    self.setSchema(task);
+    expect(self.current_schema).not.toContain('origin_value');
+  });
+  it("Should pass process the list through `filterSchema` before returning it", function(){
+    var task = { columns: [] }
+    spyOn(self,'filterSchema');
+    self.setSchema(task);
+    expect(self.filterSchema).toHaveBeenCalled();
+  });
+});
+
 describe("realTypeOf", function() {
   it("Should correctly classify string values.", function() {
     var value = "Wake up, Neo...";
