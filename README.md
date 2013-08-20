@@ -20,6 +20,8 @@ Methods to extend for Sandbox.interface
 
 - SandBox.interface.appendRecord
 
+- SandBox.interface.queryHolder
+
 - SandBox.interface.queryString
 
 - SandBox.interface.setQueryString
@@ -99,6 +101,12 @@ First include Sandbox.js and then start defining its interface
       });
       jQuery('#data-table-header').after(row);  
     } 
+
+    // @Description : This method is called by the Sandbox class to get the raw DOM element that holds 
+    //    that holds the Krake Definition
+    SandBox.interface.queryHolder = function() {
+      return jQuery('#krake_content');
+    }
 
     // @Description : This method is called by the Sandbox class to get the raw Query String input from the HTML DOM element
     //    that holds the Krake Definition
