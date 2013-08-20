@@ -52,6 +52,25 @@ describe("setSchema", function() {
   });
 });
 
+describe("filterSchema", function() {
+  var achievements = ["warrior_id","crushed_enemies","seen_driven","heard_lamentation"];
+  it("should preserve the schema if a `column_filter` is not described", function(){
+    var object = {};
+    var filtered = self.filterSchema(achievements, object);
+    expect(filtered).toEqual(achievements);
+  });
+  it("should subtract schema values that are also members of `column_filter`", function(){
+    var object = { column_filter: ["warrior_id","heard_lamentation"] };
+    var filtered = self.filterSchema(achievements, object);
+    expect(filtered).toEqual(["warrior_id","heard_lamentation"]);
+  });
+  it("should preserve schema values not described in `column_filter`", function(){
+    var object = { column_filter: ["warrior_id"] };
+    var filtered = self.filterSchema(achievements, object);
+    expect(filtered).toEqual(["warrior_id"]);
+  });
+});
+
 describe("realTypeOf", function() {
   it("Should correctly classify string values.", function() {
     var value = "Wake up, Neo...";
