@@ -1,5 +1,12 @@
 {
   "name": "sandbox",
   "version": "0.0.7",
-  "main": "./lib/sandbox"
+  "main": "index.js",
+  "devDependencies": {
+    "socket.io-client": "",
+    "jquery": ""
+  },
+  "scripts": {
+    "test": "jasmine-node test/"
+  }
 }
