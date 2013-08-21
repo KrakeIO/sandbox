@@ -59,12 +59,12 @@ describe("filterSchema", function() {
     var filtered = self.filterSchema(achievements, object);
     expect(filtered).toEqual(achievements);
   });
-  it("should subtract schema values that are also members of `column_filter`", function(){
+  it("should subtract schema values not members of `column_filter`", function(){
     var object = { column_filter: ["warrior_id","heard_lamentation"] };
     var filtered = self.filterSchema(achievements, object);
     expect(filtered).toEqual(["warrior_id","heard_lamentation"]);
   });
-  it("should preserve schema values not described in `column_filter`", function(){
+  it("should preserve schema values described in `column_filter`", function(){
     var object = { column_filter: ["warrior_id"] };
     var filtered = self.filterSchema(achievements, object);
     expect(filtered).toEqual(["warrior_id"]);
