@@ -8,6 +8,36 @@ describe("import", function() {
   });
 });
 
+describe("setupSocket", function() {
+  beforeEach(function(){
+    spyOn(io, 'connect');
+    spyOn(self, 'setSocketEventListeners'); 
+    self.setupSocket(host);
+  })
+  it("should define a socket interface", function() {
+    expect(io.connect).toHaveBeenCalled();
+  })
+  it("should set up listeners for socket events", function() {
+    expect(self.setSocketEventListeners).toHaveBeenCalled();
+  })
+})
+
+describe("setSocketEventListeners", function() {
+  // XXX
+})
+
+describe("setDocumentEventListeners", function() {
+  // XXX
+})
+
+describe("startScraping", function() {
+  // XXX
+})
+
+describe("verifyDefinition", function() {
+  // XXX
+})
+
 describe("setSchema", function() {
   beforeEach(function(){
     self.current_schema = [];
