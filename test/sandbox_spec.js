@@ -72,24 +72,75 @@ describe("filterSchema", function() {
 });
 
 describe("getSchemaRecursive", function() {
-  var columns = 
-    [ { col_name: 'title' }
-    , { col_name: 'price' }
-    , { col_name: 'href' 
-      , options: { 
-          columns: [ { col_name: 'description' } ]          
-        }
+  beforeEach(function(){
+    columns = []
+  })
+  it("should return an empty schema if it does not receive a columns object", function() {
+    var schema = self.getSchemaRecursive();
+    expect(schema).toEqual([]);
+  })
+  it("should retrieve top-level columns described in the received object", function(){
+    columns = columns.concat([
+      { col_name: 'name' }, 
+      { col_name: 'station' },
+    ])
+    var schema = self.getSchemaRecursive(columns);
+    ['name','station'].forEach(function(column){
+      expect(schema).toContain(column)
+    })
+  })
+  it("should retrieve nested columns described in the received object", function(){
+    var column = 
+      { options: 
+          { columns: 
+              [ { col_name: 'inception' } ]
+          }
       }
-    ]
-  var filtered = self.getSchemaRecursive(columns);
-  it("should describe bottom-level columns", function() {
-    ["title", "price", "description"].forEach(function(bottom){
-      expect(filtered).toContain(bottom);
+    columns.push(column);
+    var schema = self.getSchemaRecursive(columns);
+    expect(schema).toContain('inception');
+  })
+  it("should include nested origin attributes in schema array", function(){ 
+    var column = 
+      { col_name: 'privilege'
+      , options: 
+          { origin_url: 
+              { origin_value: {}
+              }
+          }
+      }
+    columns.push(column);
+    var schema = self.getSchemaRecursive(columns);
+    ['privilege_origin_pattern', 'privilege_origin_url', 'privilege_origin_value'].forEach(function(col){
+      expect(schema).toContain(col);
+    })
+  })
+  it("should append geolocation fields to the schema if an address is required", function(){
+    var column = 
+      { col_name: 'location'
+      , required_attribute: 'address'
+      }
+    columns.push(column);
+    var schema = self.getSchemaRecursive(columns);
+    ["location_country", "location_zip", "location_lat", "location_lng"].forEach(function(name){
+      expect(schema).toContain(name);
     });
   })
-  it("should not describe columns that have children", function() {
-    expect(filtered).not.toContain("detailed_page_href")
-  })
+ it("should name geolocation fields as described by user when provided", function(){
+    var column = 
+      { required_attribute: 'address'
+      , country: 'elbonia'
+      , zipcode: '00'
+      , latitude: '53'
+      , longitude: '28'
+      }
+    columns.push(column);
+    var schema = self.getSchemaRecursive(columns);
+    for (property in column) { 
+      if (property != 'required_attribute') 
+        expect(schema).toContain(column[property]);
+    }
+ })
 });
 
 describe("realTypeOf", function() {
