@@ -2,10 +2,16 @@
   "name": "sandbox",
   "version": "0.0.7",
   "main": "index.js",
-  "devDependencies": {
-    "socket.io-client": "",
-    "jquery": ""
-  },
+  "dependencies":
+    { "kson": "git://github.com/KrakeIO/kson.git"
+    , "query_validator": "git://github.com/KrakeIO/query_validator.git"
+    , "async": ""
+    },
+  "devDependencies":
+    { "socket.io-client": ""
+    , "jquery": ""
+    , "jsdom": ""
+    },
   "scripts": {
     "test": "jasmine-node test/"
   }

@@ -1,3 +1,6 @@
+window = require('jsdom').jsdom().createWindow();
+jQuery = $ = require('jquery');
+
 var sandbox = require('sandbox').sandbox;
 var host = 'http://localhost:9901'; // XXX
 var self = new sandbox(host);
@@ -10,7 +13,7 @@ describe("import", function() {
 
 describe("setupSocket", function() {
   beforeEach(function(){
-    spyOn(io, 'connect');
+    spyOn(io, 'connect').andCallThrough();
     spyOn(self, 'setSocketEventListeners'); 
     self.setupSocket(host);
   })
@@ -22,20 +25,138 @@ describe("setupSocket", function() {
   })
 })
 
-describe("setSocketEventListeners", function() {
-  // XXX
-})
+//describe("setSocketEventListeners", function() {
+//  it("should append to the log when 'connected' is emitted", function() {
+//    spyOn(self,'addToLog');
+//    self.socket.emit('connected', {status: 'success'});
+//    expect(self.addToLog).toHaveBeenCalled();
+//  })
+//})
 
 describe("setDocumentEventListeners", function() {
-  // XXX
+  it("should be set to state1", function() {
+    spyOn(self, 'state1');
+    self.setDocumentEventListeners();
+    expect(self.state1).toHaveBeenCalled();
+  });
 })
 
+describe("setDocumentEventListeners::taskButton.click", function(){
+  beforeEach(function(){
+    validDefinition = 
+      { "origin_url": "http://www.springer.com/new+%26+forthcoming+titles+%28default%29?SGWID=5-40356-404-173621539-666"
+      , "columns": 
+          [ { "col_name": "title"
+            , "xpath": "//li[@class='listItemBooks']/div[2]/div[1]/h2/a"
+            }
+          , { "col_name": "year"
+            , "xpath": "//li[@class='listItemBooks']/div[2]/div[1]/p/span[@class='displayblock']"
+            }
+          ]
+      , "next_page": 
+          { "xpath": "//*[@class='arrow arrowRight' and @href !='#']"
+          }
+      }
+    invalidDefinition = {}
+  })
+  it("should set up a socket if one isn't", function(){
+    self.socket = undefined;
+    self.setDocumentEventListeners();
+    spyOn(self,'setupSocket').andCallThrough();
+    self.interface.taskButton().click();
+    expect(self.setupSocket).toHaveBeenCalled();
+  });
+  it("should test if the task button reads start", function() {
+    spyOn(self.interface.taskButton, 'readsStart')
+    self.interface.taskButton().trigger('click');
+    expect(self.interface.taskButton.readsStart).toHaveBeenCalled();
+  })
+  it("should test if the definition is valid when the start button is clicked", function() {
+    spyOn(self.interface.taskButton, 'readsStart').andReturn(true);
+    spyOn(self, 'getJsonQueryObject').andReturn({});
+    spyOn(self,'verifyDefinition');
+    self.interface.taskButton().trigger('click');
+    expect(self.verifyDefinition).toHaveBeenCalled();
+  });
+  it("should start scraping when the definition is valid and the start button is clicked", function() {
+    spyOn(self.interface.taskButton, 'readsStart').andReturn(true);
+    spyOn(self, 'getJsonQueryObject').andReturn(validDefinition);
+    spyOn(self, 'startScraping');
+    self.interface.taskButton().trigger('click');
+    expect(self.startScraping).toHaveBeenCalled();
+  })
+  it("should be set to state2 when the definition is valid and the start button is clicked", function() {
+    spyOn(self.interface.taskButton, 'readsStart').andReturn(true);
+    spyOn(self, 'getJsonQueryObject').andReturn(validDefinition);
+    spyOn(self, 'state2');
+    self.interface.taskButton().trigger('click');
+    expect(self.state2).toHaveBeenCalled();
+  })
+  it("should display an error when the definition is invalid and the start button is clicked", function() {
+    spyOn(self.interface.taskButton, 'readsStart').andReturn(true);
+    spyOn(self, 'getJsonQueryObject').andReturn(invalidDefinition);
+    spyOn(self.interface, 'displayError');
+    self.interface.taskButton().trigger('click');
+    expect(self.interface.displayError).toHaveBeenCalled();
+  })
+  it("should show the edit pane when the definition is invalid and the start button is clicked", function() {
+    spyOn(self.interface.taskButton, 'readsStart').andReturn(true);
+    spyOn(self, 'getJsonQueryObject').andReturn(invalidDefinition);
+    spyOn(self.interface, 'showPane');
+    self.interface.taskButton().trigger('click');
+    expect(self.interface.showPane).toHaveBeenCalledWith('edit');
+  })
+  it("should be set to state1 when the definition is invalid and the start button is clicked", function() {
+    spyOn(self.interface.taskButton, 'readsStart').andReturn(true);
+    spyOn(self, 'getJsonQueryObject').andReturn(invalidDefinition);
+    spyOn(self, 'state1');
+    self.interface.taskButton().trigger('click');
+    expect(self.state1).toHaveBeenCalled();
+  })
+  it("should show the edit pane when the stop button is clicked", function() {
+    spyOn(self.interface.taskButton, 'readsStart').andReturn(false);
+    spyOn(self.interface, 'showPane');
+    self.interface.taskButton().trigger('click');
+    expect(self.interface.showPane).toHaveBeenCalledWith('edit');
+  })
+  it("should stop scraping when the stop button is clicked", function() {
+    spyOn(self.interface.taskButton, 'readsStart').andReturn(false);
+    spyOn(self, 'stopScraping');
+    self.interface.taskButton().trigger('click');
+    expect(self.stopScraping).toHaveBeenCalled()
+  })
+  it("should be set to state1 when the stop button is clicked", function() {
+    spyOn(self.interface.taskButton, 'readsStart').andReturn(false);
+    spyOn(self, 'state1');
+    self.interface.taskButton().trigger('click');
+    expect(self.state1).toHaveBeenCalled()
+  })
+});
+
 describe("startScraping", function() {
-  // XXX
+  it("should assign the schema associated with the arg to self", function(){
+    spyOn(self, 'setSchema');
+    self.startScraping({});
+    expect(self.setSchema).toHaveBeenCalled();
+  })
+  it("should reset the data table on the page", function(){
+    spyOn(self, 'resetDataTable');
+    self.startScraping({});
+    expect(self.resetDataTable).toHaveBeenCalled();
+  })
+  it("should ask the socket to start scraping, and pass it the object", function(){
+    spyOn(self.socket, 'emit');
+    self.startScraping({});
+    expect(self.socket.emit).toHaveBeenCalledWith('start scraping', '{}')
+  })
 })
 
 describe("verifyDefinition", function() {
-  // XXX
+  it("should call the validator class with its argument", function() {
+    spyOn(QueryValidator.prototype, 'validate')
+    self.verifyDefinition("", function(){});
+    expect(QueryValidator.prototype.validate).toHaveBeenCalled;
+  });
 })
 
 describe("setSchema", function() {
