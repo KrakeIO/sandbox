@@ -25,13 +25,13 @@ describe("setupSocket", function() {
   })
 })
 
-//describe("setSocketEventListeners", function() {
+describe("setSocketEventListeners", function() {
 //  it("should append to the log when 'connected' is emitted", function() {
 //    spyOn(self,'addToLog');
 //    self.socket.emit('connected', {status: 'success'});
 //    expect(self.addToLog).toHaveBeenCalled();
 //  })
-//})
+})
 
 describe("setDocumentEventListeners", function() {
   it("should be set to state1", function() {
@@ -133,6 +133,8 @@ describe("setDocumentEventListeners::taskButton.click", function(){
   })
 });
 
+describe("getJsonQueryObject", function() {})
+
 describe("startScraping", function() {
   it("should assign the schema associated with the arg to self", function(){
     spyOn(self, 'setSchema');
@@ -143,6 +145,11 @@ describe("startScraping", function() {
     spyOn(self, 'resetDataTable');
     self.startScraping({});
     expect(self.resetDataTable).toHaveBeenCalled();
+  })
+  it("should append a message to the log", function() {
+    spyOn(self, 'addToLog');
+    self.startScraping({});
+    expect(self.addToLog).toHaveBeenCalled();
   })
   it("should ask the socket to start scraping, and pass it the object", function(){
     spyOn(self.socket, 'emit');
@@ -157,6 +164,97 @@ describe("verifyDefinition", function() {
     self.verifyDefinition("", function(){});
     expect(QueryValidator.prototype.validate).toHaveBeenCalled;
   });
+})
+
+describe("stopScraping", function() {
+  it("should append a message to the log", function() {
+    spyOn(self, 'addToLog');
+    self.stopScraping({});
+    expect(self.addToLog).toHaveBeenCalled();
+  })
+  it("should ask the socket to stop scraping", function(){
+    spyOn(self.socket, 'emit');
+    self.stopScraping({});
+    expect(self.socket.emit).toHaveBeenCalledWith('stop scraping', self.task_queue_id)
+  })
+})
+
+describe("addToLog", function() {
+  it("should increment the interface's log counter", function() {
+    spyOn(self.interface, 'incrementCounter');
+    self.addToLog("Shit's going down.");
+    expect(self.interface.incrementCounter).toHaveBeenCalled();
+  })
+  it("should append its argument to the interface's log output", function() {
+    spyOn(self.interface, 'appendLog');
+    self.addToLog("Shit's going down.");
+    expect(self.interface.appendLog).toHaveBeenCalledWith("Shit's going down.");
+  })
+});
+
+describe("state1", function() {
+  it("should set the taskbutton to start", function(){
+    spyOn(self.interface.taskButton, 'setStart');
+    self.state1();
+    expect(self.interface.taskButton.setStart).toHaveBeenCalled();
+  })
+});
+
+describe("state2", function() {
+  it("should set the taskbutton to running", function(){
+    spyOn(self.interface.taskButton, 'setRunning');
+    self.state2();
+    expect(self.interface.taskButton.setRunning).toHaveBeenCalled();
+  })
+});
+
+describe("state3", function() {
+  it("should set the taskbutton to success", function(){
+    spyOn(self.interface.taskButton, 'setSuccess');
+    self.state3();
+    expect(self.interface.taskButton.setSuccess).toHaveBeenCalled();
+  })
+//  it("should bind an event to trigger when there are further edits to the definition", function(){
+//    var query_holder = self.interface.queryHolder()
+//    spyOn(query_holder, 'bind');
+//    self.state3();
+//    expect(query_holder.bind).toHaveBeenCalled();
+//  })
+//  it("should transition to state1 when there are further edits to the definition", function(){
+//  })
+});
+
+
+describe("clearDisplay", function() {
+  it("should clear the contents of the data table", function() {
+    spyOn(self.interface,'clearData');
+    self.clearDisplay();
+    expect(self.interface.clearData).toHaveBeenCalled();
+  });
+})
+
+describe("resetDataTable", function() {
+  it("should clear the contents of the data table", function() {
+    spyOn(self.interface,'clearData');
+    self.resetDataTable();
+    expect(self.interface.clearData).toHaveBeenCalled();
+  });
+  it("should reset the header of the data table", function() {
+    spyOn(self.interface,'setHeader');
+    self.resetDataTable();
+    expect(self.interface.setHeader).toHaveBeenCalled();
+  });
+})
+
+describe("addDataRow", function(){
+  it("should increment the row counter", function(){
+    spyOn(self.interface, 'incrementCounter');
+    self.addDataRow("")
+    expect(self.interface.incrementCounter).toHaveBeenCalledWith('data-row');
+  })
+  it("should not attempt to append ill-formed results")
+  it("should append values who's keys are in the schema")
+  it("should not append values who's keys are not in the schema")
 })
 
 describe("setSchema", function() {
@@ -292,6 +390,9 @@ describe("getSchemaRecursive", function() {
         expect(schema).toContain(column[property]);
     }
  })
+});
+
+describe("formatJSON", function() {
 });
 
 describe("realTypeOf", function() {
