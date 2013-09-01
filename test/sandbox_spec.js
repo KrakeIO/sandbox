@@ -133,7 +133,53 @@ describe("setDocumentEventListeners::taskButton.click", function(){
   })
 });
 
-describe("getJsonQueryObject", function() {})
+describe("getJsonQueryObject", function() {
+  beforeEach(function(){
+    badQueryString  = '\
+      <definition>\
+        <columns>\
+          <column name="title">\
+            <xpath>"//body/article/h1[@class=\'post-title\']"</xpath>\
+          </column>\
+        </columns>\
+      </definition>\
+    '
+    goodJSONQuery = 
+      { "columns":
+          [{ "column_name": "title"
+           , "xpath": "//body/article/h1[@class='post-title']"
+           }
+          ]
+      }
+    goodJSONQueryString = JSON.stringify(goodJSONQuery);
+    goodJSQueryString = '\
+      { columns: \
+          [{ column_name: "title" \
+           , xpath: "//body/article/h1[@class=\'post-title\']" \
+           } \
+          ] \
+      }'
+    eval ('goodJSQuery = ' + goodJSQueryString);
+  })
+//  it("should retrieve the value of the interface's query holder", function(){
+//    var query_holder = self.interface.queryHolder()
+//    spyOn(self.interface.queryHolder(), 'val');
+//    self.getJsonQueryObject
+//    expect(self.interface.queryHolder().val).toHaveBeenCalled();
+//  })
+//  it("should return the object corresponding to string representation of a some argument json.", function(){
+//    spyOn(self.interface.queryHolder(), 'val').andReturn(goodJSONQueryString);
+//    expect(self.getJsonQueryObject()).toBe(goodJSONQuery);
+//  })
+//  it("should return the object corresponding to string representation of a some argument js.", function(){
+//    spyOn(self.interface.queryHolder(), 'val').andReturn(goodJSQueryString);
+//    expect(self.getJsonQueryObject()).toBe(goodJSQuery);
+//  })
+//  it("should return the false if the parsing of the text fails", function(){
+//    spyOn(self.interface.queryHolder(), 'val').andReturn(badQueryString);
+//    expect(self.getJsonQueryObject()).toBe(false);
+//  })
+})
 
 describe("startScraping", function() {
   it("should assign the schema associated with the arg to self", function(){
@@ -393,6 +439,7 @@ describe("getSchemaRecursive", function() {
 });
 
 describe("formatJSON", function() {
+  // XXX
 });
 
 describe("realTypeOf", function() {
