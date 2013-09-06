@@ -176,7 +176,7 @@ describe("getJsonQueryObject", function() {
   })
   it("should return the false if the parsing of the text fails", function(){
     spyOn(jQuery.prototype, 'val').andReturn(badQueryString);
-    expect(self.getJsonQueryObject()).toEqual(false);
+    expect(self.getJsonQueryObject()).toBe(false);
   })
 })
 
@@ -442,37 +442,37 @@ describe("getSchemaRecursive", function() {
 describe("formatJSON", function() {
   it("Should describe an empty object on one line", function() {
     var json = self.formatJSON({})
-    expect(json).toEqual("{}");
+    expect(json).toBe("{}");
   });
   it("Should describe an empty list on one line", function(){
     var json = self.formatJSON([])
-    expect(json).toEqual("[]");
+    expect(json).toBe("[]");
   })
   it("should join multiple elements with commas", function() {
     var json = self.formatJSON([1,2])  
-    expect(json.match(/,/)).not.toEqual(null)
+    expect(json).toMatch(/,/)
   })
   it("it should prefix list/object members with four spaces on their own line", function() {
     var json = self.formatJSON([1,2])  
-    expect(json.match(/\n {4}/)).not.toEqual(null);
+    expect(json).toMatch(/\n {4}/)
   })
   it("should wrap the key of object members in quotes, and separate the key and value ': '", function() {
     var json=self.formatJSON({
       boring: 'jasmine'
     })
-    expect(json.match(/"boring": /)).not.toEqual(null);
+    expect(json).toMatch(/"boring": /)
   })
   it("should quote value strings appropriately", function() {
     var json=self.formatJSON({
       boring: 'jasmine',
       kool:   '\"sencha\"'
     })
-    expect(json.match(/"jasmine"/)).not.toEqual(null);
-    expect(json.match(/"\\"sencha\\""/)).not.toEqual(null);
+    expect(json).toMatch(/"jasmine"/)
+    expect(json).toMatch(/"\\"sencha\\""/)
   });
   it("should represent non-kson supported types as strings in the format 'TYPEOF: $type$'", function() {
     var json = self.formatJSON([function(){}])
-    expect(json.match(/TYPEOF: function/)).not.toEqual(null);
+    expect(json).toMatch(/TYPEOF: function/)
   })
 });
 
