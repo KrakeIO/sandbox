@@ -144,7 +144,7 @@ describe("getJsonQueryObject", function() {
         </columns>\
       </definition>\
     '
-    goodJSONQuery = 
+    goodJSONQuery =
       { "columns":
           [{ "column_name": "title"
            , "xpath": "//body/article/h1[@class='post-title']"
@@ -153,31 +153,31 @@ describe("getJsonQueryObject", function() {
       }
     goodJSONQueryString = JSON.stringify(goodJSONQuery);
     goodJSQueryString = '\
-      { columns: \
-          [{ column_name: "title" \
-           , xpath: "//body/article/h1[@class=\'post-title\']" \
-           } \
-          ] \
+      { columns:\
+          [{ column_name: "title"\
+           , xpath: "//body/article/h1[@class=\'post-title\']"\
+           }\
+          ]\
       }'
     eval ('goodJSQuery = ' + goodJSQueryString);
   })
-//  it("should retrieve the value of the interface's query holder", function(){
-//    spyOn(self.interface.queryHolder(), 'val');
-//    self.getJsonQueryObject
-//    expect(self.interface.queryHolder().val).toHaveBeenCalled();
-//  })
-//  it("should return the object corresponding to string representation of a some argument json.", function(){
-//    spyOn(self.interface.queryHolder(), 'val').andReturn(goodJSONQueryString);
-//    expect(self.getJsonQueryObject()).toBe(goodJSONQuery);
-//  })
-//  it("should return the object corresponding to string representation of a some argument js.", function(){
-//    spyOn(self.interface.queryHolder(), 'val').andReturn(goodJSQueryString);
-//    expect(self.getJsonQueryObject()).toBe(goodJSQuery);
-//  })
-//  it("should return the false if the parsing of the text fails", function(){
-//    spyOn(self.interface.queryHolder(), 'val').andReturn(badQueryString);
-//    expect(self.getJsonQueryObject()).toBe(false);
-//  })
+  it("should retrieve the value of the interface's query holder", function(){
+    spyOn(jQuery.prototype, 'val');
+    self.getJsonQueryObject()
+    expect(jQuery.prototype.val).toHaveBeenCalled();
+  })
+  it("should return the object corresponding to string representation of a some argument json.", function(){
+    spyOn(jQuery.prototype, 'val').andReturn(goodJSONQueryString);
+    expect(self.getJsonQueryObject()).toEqual(goodJSONQuery);
+  })
+  it("should return the object corresponding to string representation of a some argument js.", function(){
+    spyOn(jQuery.prototype, 'val').andReturn(goodJSQueryString);
+    expect(self.getJsonQueryObject()).toEqual(goodJSQuery);
+  })
+  it("should return the false if the parsing of the text fails", function(){
+    spyOn(jQuery.prototype, 'val').andReturn(badQueryString);
+    expect(self.getJsonQueryObject()).toEqual(false);
+  })
 })
 
 describe("startScraping", function() {
@@ -259,14 +259,16 @@ describe("state3", function() {
     self.state3();
     expect(self.interface.taskButton.setSuccess).toHaveBeenCalled();
   })
-//  it("should bind an event to trigger when there are further edits to the definition", function(){
-//    var query_holder = self.interface.queryHolder()
-//    spyOn(query_holder, 'bind');
-//    self.state3();
-//    expect(query_holder.bind).toHaveBeenCalled();
-//  })
-//  it("should transition to state1 when there are further edits to the definition", function(){
-//  })
+  it("should bind an event to trigger when there are further edits to the definition", function(){
+    spyOn(jQuery.prototype, 'bind');
+    self.state3();
+    expect(jQuery.prototype.bind).toHaveBeenCalled();
+  })
+  it("should transition to state1 when there are further edits to the definition", function(){
+    self.state3();
+    spyOn(self, 'state1');
+    self.interface.queryHolder().trigger('input')
+  })
 });
 
 
