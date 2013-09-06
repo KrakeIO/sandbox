@@ -442,37 +442,37 @@ describe("getSchemaRecursive", function() {
 describe("formatJSON", function() {
   it("Should describe an empty object on one line", function() {
     var json = self.formatJSON({})
-    expect(json).toBe("{}");
+    expect(json).toEqual("{}");
   });
   it("Should describe an empty list on one line", function(){
     var json = self.formatJSON([])
-    expect(json).toBe("[]");
+    expect(json).toEqual("[]");
   })
   it("should join multiple elements with commas", function() {
     var json = self.formatJSON([1,2])  
-    expect(json.match(/,/)).not.toBe(null)
+    expect(json.match(/,/)).not.toEqual(null)
   })
   it("it should prefix list/object members with four spaces on their own line", function() {
     var json = self.formatJSON([1,2])  
-    expect(json.match(/\n {4}/)).not.toBe(null);
+    expect(json.match(/\n {4}/)).not.toEqual(null);
   })
   it("should wrap the key of object members in quotes, and separate the key and value ': '", function() {
     var json=self.formatJSON({
       boring: 'jasmine'
     })
-    expect(json.match(/"boring": /)).not.toBe(null);
+    expect(json.match(/"boring": /)).not.toEqual(null);
   })
   it("should quote value strings appropriately", function() {
     var json=self.formatJSON({
       boring: 'jasmine',
       kool:   '\"sencha\"'
     })
-    expect(json.match(/"jasmine"/)).not.toBe(null);
-    expect(json.match(/"\\"sencha\\""/)).not.toBe(null);
+    expect(json.match(/"jasmine"/)).not.toEqual(null);
+    expect(json.match(/"\\"sencha\\""/)).not.toEqual(null);
   });
   it("should represent non-kson supported types as strings in the format 'TYPEOF: $type$'", function() {
     var json = self.formatJSON([function(){}])
-    expect(json.match(/TYPEOF: function/)).not.toBe(null);
+    expect(json.match(/TYPEOF: function/)).not.toEqual(null);
   })
 });
 
