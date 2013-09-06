@@ -162,7 +162,6 @@ describe("getJsonQueryObject", function() {
     eval ('goodJSQuery = ' + goodJSQueryString);
   })
 //  it("should retrieve the value of the interface's query holder", function(){
-//    var query_holder = self.interface.queryHolder()
 //    spyOn(self.interface.queryHolder(), 'val');
 //    self.getJsonQueryObject
 //    expect(self.interface.queryHolder().val).toHaveBeenCalled();
@@ -439,7 +438,40 @@ describe("getSchemaRecursive", function() {
 });
 
 describe("formatJSON", function() {
-  // XXX
+  it("Should describe an empty object on one line", function() {
+    var json = self.formatJSON({})
+    expect(json).toBe("{}");
+  });
+  it("Should describe an empty list on one line", function(){
+    var json = self.formatJSON([])
+    expect(json).toBe("[]");
+  })
+  it("should join multiple elements with commas", function() {
+    var json = self.formatJSON([1,2])  
+    expect(json.match(/,/)).not.toBe(null)
+  })
+  it("it should prefix list/object members with four spaces on their own line", function() {
+    var json = self.formatJSON([1,2])  
+    expect(json.match(/\n {4}/)).not.toBe(null);
+  })
+  it("should wrap the key of object members in quotes, and separate the key and value ': '", function() {
+    var json=self.formatJSON({
+      boring: 'jasmine'
+    })
+    expect(json.match(/"boring": /)).not.toBe(null);
+  })
+  it("should quote value strings appropriately", function() {
+    var json=self.formatJSON({
+      boring: 'jasmine',
+      kool:   '\"sencha\"'
+    })
+    expect(json.match(/"jasmine"/)).not.toBe(null);
+    expect(json.match(/"\\"sencha\\""/)).not.toBe(null);
+  });
+  it("should represent non-kson supported types as strings in the format 'TYPEOF: $type$'", function() {
+    var json = self.formatJSON([function(){}])
+    expect(json.match(/TYPEOF: function/)).not.toBe(null);
+  })
 });
 
 describe("realTypeOf", function() {
